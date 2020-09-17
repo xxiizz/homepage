@@ -2,7 +2,7 @@
  * @Author: xz
  * @Date: 2020-09-15 09:30:33
  * @LastEditors: xz
- * @LastEditTime: 2020-09-17 16:08:37
+ * @LastEditTime: 2020-09-17 16:12:32
  * @FilePath: \my_homepage\my_homepage\src\views\Home.vue
  * @Description: 首页
 -->
@@ -681,7 +681,6 @@ export default {
       .opensource{
         font-size: 14px;
         color: #777;
-        font-family: ;
       }
     }
   }
