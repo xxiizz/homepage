@@ -2,7 +2,7 @@
  * @Author: xz
  * @Date: 2020-09-15 09:30:33
  * @LastEditors: xz
- * @LastEditTime: 2020-09-17 16:12:32
+ * @LastEditTime: 2020-09-21 10:08:37
  * @FilePath: \my_homepage\my_homepage\src\views\Home.vue
  * @Description: 首页
 -->
@@ -168,6 +168,22 @@
               <div class="copyright">
                 <p class="title">Designed and developed by Xz.</p>
                 <a target="_blank" href="https://beian.miit.gov.cn/">粤ICP备2020081106号-1</a>
+                <div style="width:300px;margin:0 auto;">
+                  <a
+                    target="_blank"
+                    href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44030402004078"
+                    style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"
+                  >
+                    <img
+                      src="https://my-homepage-1302786361.cos.ap-guangzhou.myqcloud.com/images/beian.png"
+                      style="float:left;"
+                    />
+                    <p
+                      style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;"
+                    >粤公网安备 44030402004078号</p>
+                  </a>
+                </div>
+
                 <p class="opensource">ps：这套页面的代码已开源至github，如果有需要，可以去我的github主页查看</p>
               </div>
             </div>
@@ -378,7 +394,12 @@ export default {
     },
   },
   created() {
+    // 预加载图片
     this.preload();
+    // 统计新访客
+    this.$ajax.post('message/new_visitor').then(res=>{
+      console.log(res)
+    })
   },
   computed: {
     swiper() {
@@ -488,7 +509,7 @@ export default {
       transition: 500ms;
     }
     .avatar:hover {
-      box-shadow: 0 0 30px #ecb886;
+      box-shadow: 0 0 30px #fff;
     }
     .text {
       opacity: 0;
@@ -673,14 +694,16 @@ export default {
         font-size: 18px;
         font-family: netsrak;
         color: #777;
+        margin-bottom: 20px;
       }
       a {
         font-size: 14px;
-        color: #777;
+        color: #939393;
+        padding: 5px;
       }
-      .opensource{
+      .opensource {
         font-size: 14px;
-        color: #777;
+        color: #939393;
       }
     }
   }

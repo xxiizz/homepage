@@ -2,97 +2,327 @@
  * @Author: xz
  * @Date: 2020-09-15 09:54:45
  * @LastEditors: xz
- * @LastEditTime: 2020-09-15 12:04:16
+ * @LastEditTime: 2020-09-21 16:59:06
  * @FilePath: \my_homepage\my_homepage\src\views\Message.vue
  * @Description: 留言页
 -->
 <template>
-  <div class="hello-world">
-    <swiper id="swiperBox" v-bind:options="swiperOption" ref="mySwiper">
-      <swiper-slide class="swiper-slide" v-for="(item, index) in list" :key="index">
-        <div class="page">
-          <h3>第{{item}}页</h3>
+  <div>
+    <div class="info">
+      <div class="info_board">
+        <div class="info_board_title">
+          <p>欢迎</p>
+          <p>很高兴可以在这个网站运行的</p>
+          <p>第{{time|timeFormat}}遇见你</p>
+          <p>你是运行以来的第{{visitor_count}}位访客</p>
+          <p>在这里你可以畅所欲言</p>
+          <p>或者看看别人有什么想法</p>
         </div>
-      </swiper-slide>  
-       <div class="swiper-pagination"  slot="pagination">
-       1223
-       </div> 
-    </swiper>
+        <hr />
+        <div class="info_board_form">
+          <el-form label-position="top" :model="messageForm">
+            <el-form-item label="请告诉我该如何称呼你">
+              <el-input v-model="messageForm.name" placeholder="请输入你的昵称"></el-input>
+            </el-form-item>
+            <el-form-item label="方便的话可以留个邮箱">
+              <el-input v-model="messageForm.email" placeholder="请输入你的邮箱"></el-input>
+            </el-form-item>
+            <el-form-item label="然后告诉我你想说什么吧">
+              <el-input
+                type="textarea"
+                v-model="messageForm.content"
+                placeholder="你也来说两句吧！在此输入留言内容"
+              ></el-input>
+            </el-form-item>
+            <p class="tip">隐私说明：你的昵称以及留言内容会被公开展示，但邮箱不会</p>
+            <el-button
+              type="primary"
+              plain
+              class="btn"
+              @click="submitMessage"
+              :disabled="submiting"
+            >给我留言</el-button>
+          </el-form>
+        </div>
+      </div>
+    </div>
+    <div class="list">
+      <el-button type="primary" plain @click="$router.push('/')">返回</el-button>
+      <h3 class="title">留言板</h3>
+      <p class="title">已有 {{allMessageList.length}} 人留言</p>
+      <div class="message">
+        <div v-for="(item,index) in showMessageList" :key="index" class="message_item">
+          <p class="message_item_name">{{item.name}}</p>
+          <p
+            class="message_item_info"
+          >{{item.time | dateFormat}}{{item.city?' 在 ':''}}{{item.city}} 说：</p>
+          <p class="message_item_content">{{item.content}}</p>
+          <div class="message_item_list">
+            <div class="mil_item">
+              <img
+                class="mil_item_img"
+                @click="agree(item)"
+                src="https://my-homepage-1302786361.cos.ap-guangzhou.myqcloud.com/images/flower.png"
+                alt
+              />
+              <p class="mil_item_text">言之有理？送一束花</p>
+              <p class="mil_item_text">(收到的鲜花数：{{item.agree}})</p>
+            </div>
+            <div class="mil_item">
+              <img
+                class="mil_item_img"
+                @click="disagree(item)"
+                src="https://my-homepage-1302786361.cos.ap-guangzhou.myqcloud.com/images/tomato.png"
+                alt
+              />
+              <p class="mil_item_text">觉得不对？扔个番茄</p>
+              <p class="mil_item_text">(被扔的番茄数：{{item.disagree}})</p>
+            </div>
+          </div>
+        </div>
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="allMessageList.length"
+          @current-change="handleChange"
+        ></el-pagination>
+      </div>
+    </div>
   </div>
 </template>
- 
+
 <script>
 export default {
-  name: "HelloWorld",
+  name: "message",
   data() {
     return {
-      list: [], //轮换列表
-      swiperOption: {
-        notNextTick: true, //notNextTick是一个组件自有属性，如果notNextTick设置为true，组件则不会通过NextTick来实例化swiper，也就意味着你可以在第一时间获取到swiper对象，假如你需要刚加载遍使用获取swiper对象来做什么事，那么这个属性一定要是true
-        direction: "vertical", //水平方向移动
-        setWrapperSize: true, //Swiper使用flexbox布局(display: flex)，开启这个设定会在Wrapper上添加等于slides相加的宽或高，在对flexbox布局的支持不是很好的浏览器中可能需要用到。
-        autoHeight: true, //自动高度。设置为true时，wrapper和container会随着当前slide的高度而发生变化
-        slidesPerView: 1, //设置slider容器能够同时显示的slides数量(carousel模式)。可以设置为数字（可为小数，小数不可loop），或者 'auto'则自动根据slides的宽度来设定数量。loop模式下如果设置为'auto'还需要设置另外一个参数loopedSlides。
-        mousewheel: true, //开启鼠标滚轮控制Swiper切换。可设置鼠标选项，默认值false
-        mousewheelControl: true, //同上
-        height: window.innerHeight, // 高度设置，占满设备高度
-        resistanceRatio: 0, //抵抗率。边缘抵抗力的大小比例。值越小抵抗越大越难将slide拖离边缘，0时完全无法拖离。本业务需要
-        observeParents: true, //将observe应用于Swiper的父元素。当Swiper的父元素变化时，例如window.resize，Swiper更新
-                pagination: {
-          el: '.swiper-pagination',
-          type:'custom',
-          clickable: true
-        },
-
-        // 如果自行设计了插件，那么插件的一些配置相关参数，也应该出现在这个对象中，如下debugger
-        //debugger: true,
-
-        // swiper的各种回调函数也可以出现在这个对象中，和swiper官方一样
-        on: {
-          //监听滑动切换事件，返回swiper对象
-          slideChange: () => {
-            let swiper = this.$refs.mySwiper.swiper;
-            console.log(swiper.activeIndex); //滑动打印当前索引
-            if (swiper.activeIndex === this.list.length - 1) {
-              //到最后一个加载更多数据
-              let newList = [];
-              let listLength = this.list.length;
-              for (let i = 0; i < 10; i++) {
-                newList.push(listLength + i);
-              }
-              this.list = this.list.concat(newList);
-            }
-          },
-        },
+      messageForm: {
+        name: "",
+        email: "",
+        content: "",
       },
+      loading: true,
+      submiting: false,
+      time: 0,
+      start_date: "",
+      visitor_count: 0,
+      allMessageList: [],
+      showMessageList: [],
     };
   },
-  created() {
-    //从后台获取数据
-    this.list = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-  },
-  // 如果你需要得到当前的swiper对象来做一些事情，你可以像下面这样定义一个方法属性来获取当前的swiper对象，同时notNextTick必须为true
-  computed: {
-    swiper() {
-      return this.$refs.mySwiper.swiper;
+  methods: {
+    handleChange(current) {
+      this.showMessageList = this.allMessageList.slice(
+        (current - 1) * 10,
+        current * 10
+      );
+    },
+    agree(item) {
+      this.$ajax
+        .post("message/agree", {
+          id: item.id,
+        })
+        .then((res) => {
+          if (res.data.msg == "agree_success") {
+            item.agree++;
+          }
+        });
+    },
+    disagree(item) {
+      this.$ajax
+        .post("message/disagree", {
+          id: item.id,
+        })
+        .then((res) => {
+          if (res.data.msg == "disagree_success") {
+            item.disagree++;
+          }
+        });
+    },
+    submitMessage() {
+      if (this.messageForm.name == "" || this.messageForm.content == "") {
+        return this.$message(
+          "给我留言的话，至少要告诉我你的昵称和留言的内容哦"
+        );
+      }
+      if (this.messageForm.email != "") {
+        if (
+          !/^([a-zA-Z]|[0-9])(\w)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/.test(
+            this.messageForm.email
+          )
+        ) {
+          return this.$message.warning(
+            "你的邮箱格式好像有点问题，要不要再检查一下"
+          );
+        }
+      }
+      this.submiting = true;
+      this.$ajax
+        .post("message/comment", {
+          ...this.messageForm,
+        })
+        .then((res) => {
+          this.submiting = false;
+          if (res.data.msg == "leave_message_success") {
+            this.$message.success("留言成功，后台审核通过后会展示在留言板");
+            this.messageForm.name = "";
+            this.messageForm.email = "";
+            this.messageForm.content = "";
+          }
+        });
     },
   },
-  mounted() {
-    // this.swiper.slideTo(3, 1000, false); //手动跳到指定页
+  created() {
+    // 获取回复列表以及服务开始运行时间
+    Promise.all([
+      this.$ajax.get("message/server_info"),
+      this.$ajax.get("message/list"),
+    ]).then((res) => {
+      // 根据服务开始运行时间确定运行了多久
+      this.start_date = res[0].data.start_date;
+      this.visitor_count = res[0].data.visitor_count;
+      const start_date = new Date(res[0].data.start_date).getTime();
+      const date = new Date().getTime();
+      const time = date - start_date;
+      this.time = time;
+      setInterval(() => {
+        this.time += 1000;
+      }, 1000);
+      this.allMessageList = res[1].data.data;
+      this.showMessageList = res[1].data.data.slice(0, 10);
+      this.loading = false;
+    });
+  },
+  filters: {
+    // 将留言时间格式化
+    dateFormat: (time) => {
+      const date = new Date(time);
+      return `${date.getFullYear()}年 ${
+        date.getMonth() + 1
+      }月 ${date.getDate()}日`;
+    },
+    // 将运行时间格式化
+    timeFormat: (time) => {
+      const totalSec = time / 1000;
+      let s = Math.floor(totalSec % 60);
+      let m = Math.floor(totalSec / 60);
+      let h = 0;
+      if (m >= 60) {
+        h = Math.floor(m / 60);
+        m = Math.floor(m % 60);
+      }
+      let d = 0;
+      if (h >= 24) {
+        d = Math.floor(h / 24);
+        h = Math.floor(h % 24);
+      }
+      return `${d}天${h}小时${m}分钟${s}秒`;
+    },
   },
 };
 </script>
- 
-<style scoped>
-.swiper-slide {
-  font-size: 24px;
-  text-align: center;
-  line-height: 100px;
+
+<style lang='less' scoped>
+.list {
+  background-color: #f1f3f7;
+  position: absolute;
+  min-width: 600px;
+  right: 0;
+  left: 700px;
+  min-height: 100%;
+  padding: 30px;
+  .title {
+    text-align: center;
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 40px;
+  }
+  h3.title {
+    font-size: 45px;
+    margin-bottom: 20px;
+  }
+  .message {
+    width: 600px;
+    margin: 0 auto;
+    .message_item {
+      padding: 20px;
+      border: 1px solid #eee;
+      border-radius: 10px;
+      background-color: white;
+      margin-bottom: 20px;
+      .message_item_name {
+        font-size: 24px;
+        font-weight: 500;
+        margin-bottom: 10px;
+      }
+      .message_item_info {
+        font-size: 14px;
+        color: #999;
+        margin-bottom: 15px;
+      }
+      .message_item_content {
+        font-size: 20px;
+        color: #999;
+        margin-bottom: 40px;
+        white-space: pre-wrap;
+      }
+      .message_item_list {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        .mil_item {
+          text-align: center;
+          .mil_item_img {
+            width: 40px;
+            cursor: pointer;
+          }
+          .mil_item_text {
+            font-size: 14px;
+            color: #999;
+          }
+        }
+      }
+    }
+  }
 }
-.swiper-slide:nth-child(2n) {
-  background: skyblue;
+.info {
+  z-index: 10;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 700px;
+  background: url("https://my-homepage-1302786361.cos.ap-guangzhou.myqcloud.com/images/bg_12.jpg")
+    center center;
+  background-size: 100% 100%;
+  transition: 1s;
+  .info_board {
+    width: 400px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 20px;
+    padding: 20px;
+    .info_board_title {
+      font-size: 20px;
+      font-family: youzai;
+    }
+    .info_board_form {
+      text-align: center;
+      margin-top: 20px;
+      .tip {
+        font-size: 14px;
+        color: #777;
+      }
+      .btn {
+        margin: 20px auto 0;
+      }
+    }
+  }
 }
-.swiper-slide:nth-child(2n-1) {
-  background: seashell;
+.info:hover {
+  background-size: 110% 110%;
 }
 </style>
