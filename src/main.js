@@ -2,7 +2,7 @@
  * @Author: xz
  * @Date: 2020-09-15 09:30:33
  * @LastEditors: xz
- * @LastEditTime: 2020-09-21 16:52:58
+ * @LastEditTime: 2020-09-22 16:17:57
  * @FilePath: \my_homepage\my_homepage\src\main.js
  * @Description: 项目配置
  */
@@ -28,7 +28,7 @@ Vue.use(animated)
 
 Vue.config.productionTip = false
 
-axios.defaults.baseURL = 'http://106.55.37.94:3000';
+axios.defaults.baseURL = 'https://www.zewest.cn:3000';
 Vue.prototype.$ajax = axios
 
 new Vue({
