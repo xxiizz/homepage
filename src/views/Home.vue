@@ -2,8 +2,8 @@
  * @Author: xz
  * @Date: 2020-09-15 09:30:33
  * @LastEditors: xz
- * @LastEditTime: 2020-09-21 10:08:37
- * @FilePath: \my_homepage\my_homepage\src\views\Home.vue
+ * @LastEditTime: 2020-11-10 17:32:17
+ * @FilePath: \my_homepage\src\views\Home.vue
  * @Description: 首页
 -->
 <template>
@@ -17,16 +17,22 @@
         round
         class="message_btn"
         @click="$router.push('/message')"
-      >给我留言</el-button>
+        >给我留言</el-button
+      >
 
-      <el-tooltip class="item" effect="dark" content="页面导航" placement="bottom">
-        <div class="nav_btn" @click="showNav=!showNav">
+      <el-tooltip
+        class="item"
+        effect="dark"
+        content="页面导航"
+        placement="bottom"
+      >
+        <div class="nav_btn" @click="showNav = !showNav">
           <i class="el-icon-close" v-if="showNav"></i>
           <i class="el-icon-more" v-else></i>
         </div>
       </el-tooltip>
 
-      <div class="nav_list" :style="showNav?'':'width:0'">
+      <div class="nav_list" :style="showNav ? '' : 'width:0'">
         <el-menu :default-active="activePage">
           <el-menu-item index="0" @click="switchToPage(0)">
             <span class="iconfont nav_list-icon">&#xe56a;</span>
@@ -75,7 +81,7 @@
                 src="https://my-homepage-1302786361.cos.ap-guangzhou.myqcloud.com/images/avatar.jpg"
                 alt
               />
-              <div :class="scrollToP2?'text fadeIn':'text'">
+              <div :class="scrollToP2 ? 'text fadeIn' : 'text'">
                 <p>幸会！</p>
                 <p>西泽是我的本名，这个姓比较少见，提前说明一下..</p>
                 <p>96年10月的</p>
@@ -90,7 +96,7 @@
         <swiper-slide class="swiper-slide">
           <div class="page3">
             <div class="wrap clearfix">
-              <div :class="scrollToP3?'text fadeIn':'text'">
+              <div :class="scrollToP3 ? 'text fadeIn' : 'text'">
                 <p>any application that can be written in JavaScript</p>
                 <p>willeventually be written in JavaScript -- Atwood’s Law</p>
                 <p>作为一名前端开发，我深知前端能做的不止于简单的页面布局</p>
@@ -107,7 +113,7 @@
         <swiper-slide class="swiper-slide">
           <div class="page4">
             <div class="wrap clearfix">
-              <div :class="scrollToP4?'text fadeIn':'text'">
+              <div :class="scrollToP4 ? 'text fadeIn' : 'text'">
                 <h3 class="title">To test the limits and break through</h3>
                 <p>这是冰雪奇缘主题曲 Let it go 里的一句歌词</p>
                 <p>同时也是我对生活的态度</p>
@@ -122,7 +128,7 @@
         <swiper-slide class="swiper-slide">
           <div class="page5">
             <div class="wrap clearfix">
-              <div :class="scrollToP5?'text fadeIn':'text'">
+              <div :class="scrollToP5 ? 'text fadeIn' : 'text'">
                 <h3 class="title">Thank for watch</h3>
                 <p>如需联系我，可通过如下方式</p>
                 <p>或者左下角给我留言</p>
@@ -152,7 +158,11 @@
                       <div class="arrow"></div>
                     </div>
                   </div>
-                  <a target="_blank" href="https://github.com/xxiizz" class="btn">
+                  <a
+                    target="_blank"
+                    href="https://github.com/xxiizz"
+                    class="btn"
+                  >
                     <img
                       class="icon"
                       src="https://my-homepage-1302786361.cos.ap-guangzhou.myqcloud.com/images/github.png"
@@ -167,24 +177,41 @@
               </div>
               <div class="copyright">
                 <p class="title">Designed and developed by Xz.</p>
-                <a target="_blank" href="https://beian.miit.gov.cn/">粤ICP备2020081106号-1</a>
-                <div style="width:300px;margin:0 auto;">
+                <a target="_blank" href="https://beian.miit.gov.cn/"
+                  >粤ICP备2020081106号-1</a
+                >
+                <div style="width: 300px; margin: 0 auto">
                   <a
                     target="_blank"
                     href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44030402004078"
-                    style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"
+                    style="
+                      display: inline-block;
+                      text-decoration: none;
+                      height: 20px;
+                      line-height: 20px;
+                    "
                   >
                     <img
                       src="https://my-homepage-1302786361.cos.ap-guangzhou.myqcloud.com/images/beian.png"
-                      style="float:left;"
+                      style="float: left"
                     />
                     <p
-                      style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;"
-                    >粤公网安备 44030402004078号</p>
+                      style="
+                        float: left;
+                        height: 20px;
+                        line-height: 20px;
+                        margin: 0px 0px 0px 5px;
+                        color: #939393;
+                      "
+                    >
+                      粤公网安备 44030402004078号
+                    </p>
                   </a>
                 </div>
 
-                <p class="opensource">ps：这套页面的代码已开源至github，如果有需要，可以去我的github主页查看</p>
+                <p class="opensource">
+                  ps：这套页面的代码已开源至github，如果有需要，可以去我的github主页查看
+                </p>
               </div>
             </div>
           </div>
@@ -397,9 +424,9 @@ export default {
     // 预加载图片
     this.preload();
     // 统计新访客
-    this.$ajax.post('message/new_visitor').then(res=>{
-      console.log(res)
-    })
+    this.$ajax.post("message/new_visitor").then((res) => {
+      console.log(res);
+    });
   },
   computed: {
     swiper() {
@@ -411,6 +438,9 @@ export default {
 </script>
  
 <style lang='less' scoped>
+#swiperBox{
+  min-width: 1420px;
+}
 .fadeIn {
   animation: fadeInUp 1.2s ease 300ms;
   animation-fill-mode: forwards;
@@ -420,6 +450,7 @@ export default {
     center center no-repeat;
   background-size: 100%;
   width: 100%;
+  min-width: 1420px;
   height: 100%;
   @keyframes changeBGimg {
     0% {
@@ -491,6 +522,7 @@ export default {
   background: url("https://my-homepage-1302786361.cos.ap-guangzhou.myqcloud.com/images/bg_8.jpg")
     center center no-repeat;
   background-size: 100%;
+  min-width: 1420px;
   width: 100%;
   height: 100%;
   .wrap {
@@ -528,6 +560,7 @@ export default {
   background: url("https://my-homepage-1302786361.cos.ap-guangzhou.myqcloud.com/images/bg_7.jpg")
     center center no-repeat;
   background-size: 100%;
+  min-width: 1420px;
   width: 100%;
   height: 100%;
   .wrap {
@@ -567,6 +600,7 @@ export default {
   background: url("https://my-homepage-1302786361.cos.ap-guangzhou.myqcloud.com/images/bg_11.jpg")
     center center no-repeat;
   background-size: 100%;
+  min-width: 1420px;
   width: 100%;
   height: 100%;
   .wrap {
@@ -606,6 +640,7 @@ export default {
   background: url("https://my-homepage-1302786361.cos.ap-guangzhou.myqcloud.com/images/bg_10.jpg")
     center center no-repeat;
   background-size: 100%;
+  min-width: 1420px;
   width: 100%;
   height: 100%;
   .wrap {
